@@ -1,0 +1,8 @@
+# Algorithm 1 engineering defaults (not tuned optima).
+num_frames: 16          # T, uniformly spaced over the whole clip
+image_size: 224         # letterboxed (aspect-preserving, black padding) then resized
+color: RGB
+# Videos with < T decodable frames: all frames kept, zero-padded at the end,
+# and mask=False marks the padded positions.
+padding_policy: "end_zero_pad_with_mask"
+small_image_size: 112   # derived on the fly for from-scratch CNNs (2D-CNN, CNN-LSTM)

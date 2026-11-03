@@ -1,0 +1,23 @@
+# PILOT configuration: reduced data + epochs. Results are labelled PILOT and are
+# never merged with full-experiment results (separate run directory).
+name: pilot
+pilot: true
+seed: 42
+num_classes: 9
+split:
+  fractions: {train: 0.70, val: 0.10, test: 0.20}
+  search_trials: 300
+  seed: 42
+training:
+  device: cpu
+  num_threads: 4
+  class_weighting: inverse_frequency
+  selection_metric: val_macro_f1
+  early_stopping_patience: 3
+  max_epochs_override: 3
+evaluation:
+  bootstrap_iterations: 200
+  bootstrap_seed: 123
+  latency_videos: 8
+  extra_training_seeds: []
+max_videos: 400

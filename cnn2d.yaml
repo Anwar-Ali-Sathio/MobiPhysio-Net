@@ -1,0 +1,13 @@
+input: RGB frames 16 x 112 x 112 (from-scratch, no pretraining)
+widths: [32, 64, 128, 256]
+feat_dim: 256
+dropout: 0.3
+lr: 0.001
+weight_decay: 0.05
+batch_size: 16
+epochs: 18
+patience: 6
+augment: true
+train_frames: 8          # sorted random subset per step; eval uses all 16
+aug_pad: 8
+grad_clip: 5.0

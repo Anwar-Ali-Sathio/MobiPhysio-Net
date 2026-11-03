@@ -1,0 +1,2 @@
+key,model,n_seeds,seeds,macro_f1_mean,macro_f1_sd,accuracy_mean,per_seed_macro_f1
+bilstm,BiLSTM,3,"[1, 2, 42]",0.7979329156854137,0.022929390357916697,0.7782294489611563,"[0.7952, 0.7765, 0.8221]"

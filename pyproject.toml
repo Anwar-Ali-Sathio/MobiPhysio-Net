@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mobiphysio"
+version = "0.1.0"
+description = "MobiPhysio-Net: ViT + temporal encoder + DTW reference features for MobiPhysio exercise recognition"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+  "torch>=2.2", "torchvision>=0.17", "timm>=1.0", "numpy>=1.26", "pandas>=2.0", "scikit-learn>=1.4",
+  "scipy>=1.11", "opencv-python-headless>=4.9", "av>=12", "matplotlib>=3.8", "PyYAML>=6", "requests>=2.31",
+  "markdown>=3.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+mobiphysio = "mobiphysio.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501", "E731", "B023", "B905"]   # E501: long literal strings in report generators; E731: table lambdas; B023/B905 reviewed

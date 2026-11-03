@@ -1,0 +1,47 @@
+# Dataset source and storage configuration.
+doi: "doi:10.7910/DVN/XSI0QN"
+api_base: "https://dataverse.harvard.edu/api"
+# Raw data / caches live OUTSIDE the repository. Override with env MOBIPHYSIO_DATA_DIR
+# or `--data-dir` on the CLI.
+data_dir: "../mobiphysio_data"
+manifest_dir: "data/manifests"
+
+download:
+  timeout_s: 120
+  max_retries: 5
+  backoff_s: 2.0
+  chunk_bytes: 4194304
+  # The full dataset is ~158.7 GB. When false, each raw MP4 is deleted after it has
+  # been checksum-verified and decoded into the frame cache (stream-process mode).
+  keep_raw_videos: false
+  workers: 4
+
+# Filename convention from the official README (MobiPhysio.md, v1.1):
+#   E{xx}_P{yy}_A{F|L|R}_V{FL|ML|LL|LJ|HJ|O|LR}_G{M|F}.mp4
+filename:
+  pattern: '^(?P<exercise>E\d{2})_(?P<participant>P\d{2})_A(?P<angle>[A-Z]+)_V(?P<variation>[A-Z]+)_G(?P<gender>[MF])$'
+  angle_codes: {F: Front, L: Left, R: Right}
+  variation_codes:
+    FL: Full Light
+    ML: Medium Light
+    LL: Low Light
+    LJ: Low Jitter
+    HJ: High Jitter
+    O: Occlusion
+    LR: Low Resolution
+
+# Names from the official README. NOTE: the README lists E08 as "Both Leg Flexion";
+# the research brief called it "Lumbar Flexion". The official name is used.
+exercises:
+  E01: Abduction
+  E02: Adduction
+  E03: Lateral Rotation
+  E04: Medial Rotation
+  E05: Circumduction
+  E06: Wrist Extension
+  E07: Hip Joint Flexion
+  E08: Both Leg Flexion
+  E09: Back Extension
+
+annotation_file: "Physiotherapist Exercise Marking .csv"
+readme_file: "MobiPhysio.md"

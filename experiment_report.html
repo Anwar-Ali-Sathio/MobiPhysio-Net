@@ -1,0 +1,506 @@
+<!doctype html><html><head><meta charset='utf-8'><title>MobiPhysio-Net report</title><style>body{font-family:system-ui,sans-serif;max-width:1100px;margin:2rem auto;padding:0 16px;color:#0b0b0b;background:#fcfcfb}table{border-collapse:collapse;font-size:13px;margin:1rem 0;display:block;overflow-x:auto}td,th{border:1px solid #ddd;padding:4px 8px;text-align:right}th{background:#f1f0ec}td:first-child,th:first-child{text-align:left}img{max-width:100%}</style></head><body><h1>MobiPhysio-Net experiment report - PILOT (reduced data/epochs; not a benchmark)</h1>
+<p>All numbers below are read from saved prediction/metric files; see <code>reproducibility_audit.md</code> and <code>verification.json</code> for the recomputation check.</p>
+<h2>Task A - 9-class exercise recognition (participant-independent test set)</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Accuracy</th>
+<th>Balanced acc.</th>
+<th>Macro P</th>
+<th>Macro R</th>
+<th>Macro F1</th>
+<th>Macro F1 95% CI</th>
+<th>Weighted F1</th>
+<th>ROC-AUC (OvR)</th>
+<th>Test videos</th>
+<th>Latency ms (median)</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SVM</td>
+<td>0.610</td>
+<td>0.189</td>
+<td>0.208</td>
+<td>0.189</td>
+<td>0.159</td>
+<td>[0.087, 0.268]</td>
+<td>0.478</td>
+<td>0.701</td>
+<td>82</td>
+<td>24.243</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>2D-CNN</td>
+<td>0.171</td>
+<td>0.071</td>
+<td>0.116</td>
+<td>0.071</td>
+<td>0.070</td>
+<td>[0.038, 0.101]</td>
+<td>0.218</td>
+<td>0.475</td>
+<td>82</td>
+<td>401.295</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>LSTM</td>
+<td>0.171</td>
+<td>0.231</td>
+<td>0.148</td>
+<td>0.231</td>
+<td>0.131</td>
+<td>[0.021, 0.197]</td>
+<td>0.188</td>
+<td>0.747</td>
+<td>82</td>
+<td>4116.954</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>BiLSTM</td>
+<td>0.232</td>
+<td>0.248</td>
+<td>0.183</td>
+<td>0.248</td>
+<td>0.153</td>
+<td>[0.029, 0.236]</td>
+<td>0.262</td>
+<td>0.743</td>
+<td>82</td>
+<td>4007.678</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>CNN-LSTM</td>
+<td>0.171</td>
+<td>0.109</td>
+<td>0.056</td>
+<td>0.109</td>
+<td>0.046</td>
+<td>[0.024, 0.067]</td>
+<td>0.182</td>
+<td>0.439</td>
+<td>82</td>
+<td>489.293</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>ResNet50</td>
+<td>0.366</td>
+<td>0.284</td>
+<td>0.183</td>
+<td>0.284</td>
+<td>0.196</td>
+<td>[0.114, 0.271]</td>
+<td>0.391</td>
+<td>0.745</td>
+<td>82</td>
+<td>3831.842</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>MobiPhysio-Net</td>
+<td>0.378</td>
+<td>0.176</td>
+<td>0.127</td>
+<td>0.176</td>
+<td>0.142</td>
+<td>[0.075, 0.183]</td>
+<td>0.378</td>
+<td>0.698</td>
+<td>82</td>
+<td>3201.511</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+</tbody>
+</table>
+<p>CI: participant-level cluster bootstrap (test participants resampled with replacement). Latency: median CPU time to classify one video from cached 16x224x224 frames (includes the backbone; excludes MP4 decoding).</p>
+<h3>Input modality per model (comparison is NOT perfectly controlled)</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Input / backbone</th>
+<th>Trainable params</th>
+<th>Total params (incl. frozen)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SVM</td>
+<td>handcrafted HOG + motion-energy descriptor (16 frames)</td>
+<td>1209600</td>
+<td>1209600</td>
+</tr>
+<tr>
+<td>2D-CNN</td>
+<td>RGB 16x112x112, from scratch</td>
+<td>457001</td>
+<td>457001</td>
+</tr>
+<tr>
+<td>LSTM</td>
+<td>frozen ImageNet ResNet50 frame embeddings</td>
+<td>1053193</td>
+<td>24561225</td>
+</tr>
+<tr>
+<td>BiLSTM</td>
+<td>frozen ImageNet ResNet50 frame embeddings</td>
+<td>1581833</td>
+<td>25089865</td>
+</tr>
+<tr>
+<td>CNN-LSTM</td>
+<td>RGB 16x112x112, from scratch</td>
+<td>653481</td>
+<td>653481</td>
+</tr>
+<tr>
+<td>ResNet50</td>
+<td>RGB 16x224x224, frozen ImageNet ResNet50 + linear head</td>
+<td>18441</td>
+<td>23526473</td>
+</tr>
+<tr>
+<td>MobiPhysio-Net</td>
+<td>RGB 16x224x224, frozen ViT-S/16 + temporal Transformer + DTW</td>
+<td>333851</td>
+<td>21999515</td>
+</tr>
+</tbody>
+</table>
+<h2>Ablations (same split, same test videos)</h2>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Macro F1</th>
+<th>Accuracy</th>
+<th>Balanced acc.</th>
+<th>Full - variant (macro F1)</th>
+<th>diff CI low</th>
+<th>diff CI high</th>
+<th>Latency ms</th>
+<th>Trainable params</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full MobiPhysio-Net (frozen ViT)</td>
+<td>0.142</td>
+<td>0.378</td>
+<td>0.176</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>3201.511</td>
+<td>333851</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>ViT + temporal encoder, no DTW</td>
+<td>0.160</td>
+<td>0.195</td>
+<td>0.217</td>
+<td>-0.018</td>
+<td>-0.092</td>
+<td>0.112</td>
+<td>2989.736</td>
+<td>332681</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>ViT + DTW features, no temporal encoder</td>
+<td>0.160</td>
+<td>0.305</td>
+<td>0.231</td>
+<td>-0.018</td>
+<td>-0.131</td>
+<td>0.069</td>
+<td>2750.519</td>
+<td>52379</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>Full model, frozen ViT (same run as row 1)</td>
+<td>0.142</td>
+<td>0.378</td>
+<td>0.176</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>3201.511</td>
+<td>333851</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+<tr>
+<td>Full model, last-block fine-tuned ViT</td>
+<td>0.205</td>
+<td>0.561</td>
+<td>0.234</td>
+<td>-0.063</td>
+<td>-0.103</td>
+<td>0.046</td>
+<td>3262.615</td>
+<td>333851</td>
+<td>COMPLETED (PILOT)</td>
+</tr>
+</tbody>
+</table>
+<p>Difference CIs: paired participant-level bootstrap on identical test videos.</p>
+<p><strong>Central ablation (DTW contribution):</strong> full - no-DTW macro F1 = -0.0178 (95% CI [-0.0918, +0.1120]); the interval includes zero. Latency cost of the DTW branch: +211.8 ms per video. McNemar discordant counts: full right/no-DTW wrong = 24, full wrong/no-DTW right = 9.</p>
+<h2>Training-seed variability (same split)</h2>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th>n_seeds</th>
+<th>seeds</th>
+<th>macro_f1_mean</th>
+<th>macro_f1_sd</th>
+<th>per_seed_macro_f1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LSTM</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.131</td>
+<td>n/a</td>
+<td>[0.1311]</td>
+</tr>
+<tr>
+<td>BiLSTM</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.153</td>
+<td>n/a</td>
+<td>[0.1531]</td>
+</tr>
+<tr>
+<td>ResNet50</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.196</td>
+<td>n/a</td>
+<td>[0.1956]</td>
+</tr>
+<tr>
+<td>SVM</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.159</td>
+<td>n/a</td>
+<td>[0.1594]</td>
+</tr>
+<tr>
+<td>MobiPhysio-Net</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.142</td>
+<td>n/a</td>
+<td>[0.142]</td>
+</tr>
+<tr>
+<td>2D-CNN</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.070</td>
+<td>n/a</td>
+<td>[0.0697]</td>
+</tr>
+<tr>
+<td>CNN-LSTM</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.046</td>
+<td>n/a</td>
+<td>[0.0463]</td>
+</tr>
+<tr>
+<td>ViT + temporal (no DTW)</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.160</td>
+<td>n/a</td>
+<td>[0.1599]</td>
+</tr>
+<tr>
+<td>ViT + DTW (no temporal encoder)</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.160</td>
+<td>n/a</td>
+<td>[0.1595]</td>
+</tr>
+<tr>
+<td>Full, last-block fine-tuned ViT</td>
+<td>1</td>
+<td>[42]</td>
+<td>0.205</td>
+<td>n/a</td>
+<td>[0.2053]</td>
+</tr>
+</tbody>
+</table>
+<p>Differences between models smaller than this seed spread should not be interpreted.</p>
+<h2>MobiPhysio-Net by camera angle and recording variation (README-recommended breakdown)</h2>
+<table>
+<thead>
+<tr>
+<th>factor</th>
+<th>level</th>
+<th>n</th>
+<th>accuracy</th>
+<th>macro_f1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>angle</td>
+<td>F</td>
+<td>34</td>
+<td>0.441</td>
+<td>0.093</td>
+</tr>
+<tr>
+<td>angle</td>
+<td>L</td>
+<td>24</td>
+<td>0.250</td>
+<td>0.080</td>
+</tr>
+<tr>
+<td>angle</td>
+<td>R</td>
+<td>24</td>
+<td>0.417</td>
+<td>0.151</td>
+</tr>
+<tr>
+<td>variation</td>
+<td>FL</td>
+<td>21</td>
+<td>0.429</td>
+<td>0.127</td>
+</tr>
+<tr>
+<td>variation</td>
+<td>HJ</td>
+<td>8</td>
+<td>0.375</td>
+<td>0.130</td>
+</tr>
+<tr>
+<td>variation</td>
+<td>LJ</td>
+<td>13</td>
+<td>0.462</td>
+<td>0.083</td>
+</tr>
+<tr>
+<td>variation</td>
+<td>LL</td>
+<td>10</td>
+<td>0.300</td>
+<td>0.061</td>
+</tr>
+<tr>
+<td>variation</td>
+<td>LR</td>
+<td>2</td>
+<td>1.000</td>
+<td>0.111</td>
+</tr>
+<tr>
+<td>variation</td>
+<td>ML</td>
+<td>14</td>
+<td>0.429</td>
+<td>0.181</td>
+</tr>
+<tr>
+<td>variation</td>
+<td>O</td>
+<td>14</td>
+<td>0.143</td>
+<td>0.034</td>
+</tr>
+</tbody>
+</table>
+<h2>Task B - EAAQ movement-quality score (exploratory)</h2>
+<p>Target: per-video mean of 3 physiotherapists' EAAQ scores (0-100), explicit-name linkage only. Linked usable videos: 311 (train 229, val 21, test 61). Inter-judge ICC(2,1) = 0.869; mean per-video judge SD = 2.92 points. Score mean 81.7 (SD 12.8).</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th>mae</th>
+<th>rmse</th>
+<th>r2</th>
+<th>spearman</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>train_mean</td>
+<td>9.802</td>
+<td>11.953</td>
+<td>-0.100</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>exercise_mean</td>
+<td>8.696</td>
+<td>11.408</td>
+<td>-0.002</td>
+<td>0.418</td>
+</tr>
+<tr>
+<td>exercise_variation_mean</td>
+<td>10.598</td>
+<td>13.475</td>
+<td>-0.398</td>
+<td>0.038</td>
+</tr>
+<tr>
+<td>ridge_vit</td>
+<td>9.799</td>
+<td>12.180</td>
+<td>-0.142</td>
+<td>-0.095</td>
+</tr>
+<tr>
+<td>temporal_vit</td>
+<td>10.682</td>
+<td>12.741</td>
+<td>-0.250</td>
+<td>-0.067</td>
+</tr>
+</tbody>
+</table>
+<p><code>exercise_variation_mean</code> uses only the exercise code and the recording-variation code. If it is competitive with the video models, the scores are largely explained by recording condition / exercise identity, and a low error does not demonstrate movement-quality assessment.</p>
+<h2>Missing / incomplete</h2>
+<ul>
+<li>All registered model runs completed.</li>
+</ul>
+<h2>Figures</h2>
+<p><img alt="model_comparison" src="../figures/model_comparison.png" />
+<img alt="confusion_matrices" src="../figures/confusion_matrices.png" />
+<img alt="per_class_f1" src="../figures/per_class_f1.png" />
+<img alt="training_curves" src="../figures/training_curves.png" />
+<img alt="dtw_ablation" src="../figures/dtw_ablation.png" /></p>
+<h2>Interpretation limits</h2>
+<ul>
+<li>Recognising WHICH exercise is performed does not establish whether it is performed correctly; no clinical validity or utility is claimed.</li>
+<li>Single dataset, single participant split, no external validation; ~12 test participants make CIs wide.</li>
+<li>Backbones (ViT-S/16, ResNet50) are frozen ImageNet models (CPU budget); from-scratch CNNs see 112 px frames. Rankings reflect these specific, documented configurations - not the architecture families in general.</li>
+<li>See docs/LIMITATIONS.md.</li>
+</ul></body></html>

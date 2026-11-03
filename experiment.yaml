@@ -1,0 +1,40 @@
+# Full experiment configuration (Task A: 9-class exercise recognition).
+name: full_v2   # v2: excludes the duplicate-content pair (see experiments/full_v1_superseded)
+pilot: false
+seed: 42
+num_classes: 9
+
+split:
+  # README-recommended participant split 70/10/20 (by participant IDs).
+  fractions: {train: 0.70, val: 0.10, test: 0.20}
+  # Grouped stratification: among `search_trials` random participant partitions
+  # (labels only, no model involved) pick the one with the smallest max deviation
+  # of class proportions from the global distribution, requiring every class to
+  # be present in every split.
+  search_trials: 2000
+  seed: 42
+
+training:
+  device: cpu
+  num_threads: 4
+  class_weighting: inverse_frequency   # cross-entropy class weights from TRAIN counts
+  selection_metric: val_macro_f1
+  early_stopping_patience: 8
+
+# Final comparison scope (decision log D4, reports/experiment_decision_log.md).
+final_comparison_models: [svm, cnn2d, lstm, cnn_lstm, resnet50, mobiphysio_net]
+ablation_keys: [mobiphysio_net__no_dtw, mobiphysio_net__dtw_no_temporal, mobiphysio_net__finetuned_vit]
+# Trained and kept as evidence, reported only in results/supplementary/ (never in main tables/figures).
+historical_models: [bilstm]
+
+evaluation:
+  bootstrap_iterations: 2000           # participant-level cluster bootstrap
+  bootstrap_seed: 123
+  latency_videos: 32                   # videos timed for end-to-end inference latency
+  extra_training_seeds: [1, 2]         # seed-variability reruns (same split)
+  # All six final model families and all three ablation variants are rerun with every extra seed.
+  extra_seed_models: [svm, lstm, resnet50, mobiphysio_net, cnn2d, cnn_lstm]
+  extra_seed_ablations: [no_dtw, dtw_no_temporal, finetuned_vit]
+
+# Restrict the run (pilot mode). null = use everything.
+max_videos: null

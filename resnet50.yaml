@@ -1,0 +1,8 @@
+input: RGB frames 16 x 224 x 224 -> frozen ImageNet ResNet50 (IMAGENET1K_V2) -> trainable linear head
+backbone_trainable: false   # CPU budget: full fine-tuning infeasible (see docs/LIMITATIONS.md)
+dropout: 0.3
+lr: 0.001
+weight_decay: 0.05
+batch_size: 32
+epochs: 40
+patience: 8

@@ -1,0 +1,4 @@
+# SVM on handcrafted HOG + motion-energy descriptors (see models/svm.py).
+input: handcrafted video descriptor from cached 16 x 224 frames
+C: [0.1, 1, 10, 100]
+gamma_multipliers: [0.1, 0.3, 1.0, 3.0]   # x (1 / n_features) == x sklearn "scale" on standardised data

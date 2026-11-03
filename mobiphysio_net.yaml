@@ -1,0 +1,32 @@
+input: RGB frames 16 x 224 x 224 -> ViT-S/16 (timm vit_small_patch16_224.augreg_in21k_ft_in1k)
+# Primary configuration pre-specified BEFORE any test evaluation: frozen ViT.
+vit_mode: frozen            # frozen | last_block
+d_h: 128
+layers: 2
+heads: 4
+ff: 256
+dropout: 0.2
+head_hidden: 128
+# DTW branch (Algorithms 4-6)
+refs_per_class: 3           # DTW k-medoids per class from TRAINING videos only
+reference_sample_limit: 200 # max training videos per class in the medoid distance matrix
+dtw_band: 4                 # Sakoe-Chiba half-width in frames (w = max(4, |T-L|))
+dtw_aggregation: min        # class distance = min over that class's references
+scaler_fit_max_videos: 2048 # training videos used to fit the distance standardiser
+# Optimisation (Algorithm 7)
+lr: 0.0005
+weight_decay: 0.05
+batch_size: 32
+epochs: 40
+patience: 8
+grad_clip: 5.0
+label_smoothing: 0.0
+
+ablations:
+  full:            {vit_mode: frozen,     use_dtw: true,  use_temporal: true}
+  no_dtw:          {vit_mode: frozen,     use_dtw: false, use_temporal: true}
+  dtw_no_temporal: {vit_mode: frozen,     use_dtw: true,  use_temporal: false}
+  frozen_vit:      {vit_mode: frozen,     use_dtw: true,  use_temporal: true}   # == full
+  finetuned_vit:   {vit_mode: last_block, use_dtw: true,  use_temporal: true}
+# CPU budget for the last-block fine-tuning variant
+finetune_overrides: {lr: 0.0002, epochs: 8, patience: 3, batch_size: 16, scaler_fit_max_videos: 512}
